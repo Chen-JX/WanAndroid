@@ -12,6 +12,7 @@ public class HomePageArticle implements Parcelable {
 
     private String title;
     private String superChapterName;
+    private String page;
 
     public HomePageArticle(){}
 
@@ -22,6 +23,7 @@ public class HomePageArticle implements Parcelable {
         niceDate = in.readString();
         title = in.readString();
         superChapterName = in.readString();
+        page = in.readString();
     }
 
     public static final Creator<HomePageArticle> CREATOR = new Creator<HomePageArticle>() {
@@ -77,6 +79,8 @@ public class HomePageArticle implements Parcelable {
     public String getSuperChapterName() {
         return superChapterName;
     }
+    public String getPage(){return page;}
+    public void setPage(String page){this.page = page;}
     public void setSuperChapterName(String superChapterName) {
         this.superChapterName = superChapterName;
     }

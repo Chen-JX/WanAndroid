@@ -2,7 +2,6 @@ package com.CJX.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,9 +21,7 @@ import com.CJX.Adapter.LooperPagerAdapter;
 import com.CJX.bean.Banner;
 import com.CJX.bean.Constant;
 import com.CJX.bean.HomePageArticle;
-import com.CJX.db.HomePageArticleListDatabase;
 import com.CJX.server.ArticleServer;
-import com.CJX.server.ImageServer;
 import com.CJX.server.LooperImageServer;
 import com.CJX.view.WebActivity;
 import com.CJX.widget.PullToRefreshListView;

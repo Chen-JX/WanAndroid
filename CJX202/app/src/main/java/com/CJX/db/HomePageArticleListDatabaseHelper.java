@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class HomePageArticleListDatabase extends SQLiteOpenHelper {
+public class HomePageArticleListDatabaseHelper extends SQLiteOpenHelper {
     private Context mContext;
     public static final String CREATE_HOMEPAGEARTICLELIST = "create table HomePageArticleList ("
             + "id integer primary key autoincrement, "
@@ -16,7 +16,7 @@ public class HomePageArticleListDatabase extends SQLiteOpenHelper {
             + "page integer,"
             + "title text)";
 
-    public HomePageArticleListDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public HomePageArticleListDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         mContext = context;
     }

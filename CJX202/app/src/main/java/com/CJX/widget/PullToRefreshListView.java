@@ -23,8 +23,8 @@ import android.widget.TextView;
 import com.example.cjx20.R;
 
 public class PullToRefreshListView extends ListView implements OnScrollListener {
-    private View bottomView; //尾文件
-    private View headView; //头文件
+    private View mBottomView; //尾文件
+    private View mHeadView; //头文件
     private int totalItemCounts;//用于表示是下拉还是上拉
     private int lassVisible; //上拉
     private int firstVisible; //下拉
@@ -34,7 +34,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     private int YLoad;//位置
     boolean isLoading;//加载状态
     private TextView headText;//头文件textView显示加载文字
-    private TextView headTime;//头文件textView显示加载时间
+//    private TextView headTime;//头文件textView显示加载时间
     private ProgressBar progressBar;//加载进度
 
     public PullToRefreshListView(Context context) {
@@ -52,27 +52,27 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
     private void Init(Context context) {
         //拿到头布局文件xml
-        headView= LinearLayout.inflate(context, R.layout.listview_head, null);
-        headText=(TextView) headView.findViewById(R.id.headtxt);
-        headTime=(TextView) headView.findViewById(R.id.timetxt);
-        progressBar=(ProgressBar) headView.findViewById(R.id.headprogress);
-        headTime.setText("上次更新时间:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
+        mHeadView= LinearLayout.inflate(context, R.layout.listview_head, null);
+        headText=(TextView) mHeadView.findViewById(R.id.headtxt);
+//        headTime=(TextView) mHeadView.findViewById(R.id.timetxt);
+        progressBar=(ProgressBar) mHeadView.findViewById(R.id.headprogress);
+//        headTime.setText("上次更新时间:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()));
 
         //拿到尾布局文件
-        bottomView = LinearLayout.inflate(context, R.layout.listview_bottom, null);
+        mBottomView = LinearLayout.inflate(context, R.layout.listview_bottom, null);
         //测量尾文件高度
-        bottomView.measure(0,0);
+        mBottomView.measure(0,0);
         //拿到高度
-        bottomHeight=bottomView.getMeasuredHeight();
+        bottomHeight=mBottomView.getMeasuredHeight();
         //隐藏view
-        bottomView.setPadding(0, -bottomHeight, 0, 0);
-        headView.measure(0, 0);
-        headHeight=headView.getMeasuredHeight();
-        headView.setPadding(0,-headHeight, 0, 0);
+        mBottomView.setPadding(0, -bottomHeight, 0, 0);
+        mHeadView.measure(0, 0);
+        headHeight=mHeadView.getMeasuredHeight();
+        mHeadView.setPadding(0,-headHeight, 0, 0);
         //添加listView底部
-        this.addFooterView(bottomView);
+        this.addFooterView(mBottomView);
         //添加到listView头部
-        this.addHeaderView(headView);
+        this.addHeaderView(mHeadView);
         //设置拉动监听
         this.setOnScrollListener(this);
     }
@@ -95,7 +95,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
                     headText.setText("松开刷新........");
                     progressBar.setVisibility(View.GONE);
                 }
-                headView.setPadding(0, paddingY, 0, 0);
+                mHeadView.setPadding(0, paddingY, 0, 0);
                 break;
         }
         return super.onTouchEvent(ev);
@@ -105,7 +105,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         if(totalItemCounts == lassVisible && scrollState == SCROLL_STATE_IDLE){
             if(!isLoading){
                 isLoading=true;
-                bottomView.setPadding(0, 0, 0, 0);
+                mBottomView.setPadding(0, 0, 0, 0);
                 //加载数据
                 loadListener.onLoad();
             }
@@ -114,7 +114,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         Log.i("TGA", "状态？"+(firstVisible==0));
 
         if(firstVisible == 0 && scrollState == SCROLL_STATE_IDLE){
-            headView.setPadding(0, 0, 0, 0);
+            mHeadView.setPadding(0, 0, 0, 0);
             headText.setText("正在刷新.......");
             progressBar.setVisibility(View.VISIBLE);
             loadListener.PullLoad();
@@ -140,8 +140,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     //加载完成
     public void loadComplete(){
         isLoading=false;
-        bottomView.setPadding(0, -bottomHeight, 0, 0);
-        headView.setPadding(0, -headHeight, 0, 0);
+        mBottomView.setPadding(0, -bottomHeight, 0, 0);
+        mHeadView.setPadding(0, -headHeight, 0, 0);
     }
 
     public void setInteface(LoadListener loadListener){
@@ -150,3 +150,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
 
 }
+
+
+

@@ -11,7 +11,7 @@ import android.util.Log;
 import com.CJX.MyApplication;
 import com.CJX.bean.Constant;
 import com.CJX.bean.HomePageArticle;
-import com.CJX.db.HomePageArticleListDatabase;
+import com.CJX.db.HomePageArticleListDatabaseHelper;
 import com.CJX.util.HttpConnectionUtil;
 
 import org.json.JSONArray;
@@ -41,6 +41,8 @@ public class ArticleServer extends Thread{
         Message message = Message.obtain();
         Bundle bundle = new Bundle();
         message.setData(bundle);
+
+
         if(!HttpConnectionUtil.checkNetWork()){
 
             message.what = Constant.ERROR;
@@ -57,7 +59,6 @@ public class ArticleServer extends Thread{
             //将数据添加进数据库
             addDataToDatabase(homePageArticles);
 
-
             bundle.putParcelableArrayList("result",homePageArticles);
             mHandler.sendMessage(message);
         }
@@ -72,11 +73,14 @@ public class ArticleServer extends Thread{
      * @param json
      * @return ArrayList<HomePageArticle>
      */
+
     private ArrayList<HomePageArticle> parseJson(String json){
         ArrayList<HomePageArticle> homePageArticles = new ArrayList<HomePageArticle>();
         try{
             JSONObject firstObject = new JSONObject(json);
             JSONObject dataObject = firstObject.getJSONObject("data");
+            String page = dataObject.getString("curPage");
+
             JSONArray jsonArray = dataObject.optJSONArray("datas");
 
             for(int i = 0; i < jsonArray.length(); i++){
@@ -90,6 +94,7 @@ public class ArticleServer extends Thread{
                 homePageArticle.setLink(childObject.optString("link"));
                 homePageArticle.setNiceDate(childObject.optString("niceDate"));
                 homePageArticle.setTitle(childObject.optString("title"));
+                homePageArticle.setPage(page);
 
                 homePageArticles.add(homePageArticle);
             }
@@ -103,9 +108,9 @@ public class ArticleServer extends Thread{
      * 把数据存储至数据库
      * */
     private void addDataToDatabase(List<HomePageArticle> homePageArticleList){
-        HomePageArticleListDatabase homePageArticleListDatabase = new HomePageArticleListDatabase(MyApplication.getContext(),"HomePageArticleList.db",null,1);
-        //homePageArticleListDatabase.getWritableDatabase();
-        SQLiteDatabase db = homePageArticleListDatabase.getWritableDatabase();
+        HomePageArticleListDatabaseHelper homePageArticleListDatabaseHelper = new HomePageArticleListDatabaseHelper(MyApplication.getContext(),"HomePageArticleList.db",null,1);
+        //homePageArticleListDatabaseHelper.getWritableDatabase();
+        SQLiteDatabase db = homePageArticleListDatabaseHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         for(int i = 0; i < homePageArticleList.size(); i++){
@@ -125,38 +130,18 @@ public class ArticleServer extends Thread{
     }
 
 
-
-    //从数据库中查询数据
-    private ArrayList<HomePageArticle> getData(){
-        ArrayList<HomePageArticle> homePageArticles = new ArrayList<HomePageArticle>();
-
-        HomePageArticleListDatabase homePageArticleListDatabase = new HomePageArticleListDatabase(MyApplication.getContext(),"HomePageArticleList.db",null,1);
-        SQLiteDatabase db = homePageArticleListDatabase.getWritableDatabase();
-
-        //查询表中的数据
-        Cursor cursor = db.query("HomePageArticleList",null,null,null,null,null,null);
-        try{
-            if(cursor.moveToFirst()){
-                do{
-                    HomePageArticle homePageArticle = new HomePageArticle();
-
-                    homePageArticle.setAuthor(cursor.getString(cursor.getColumnIndex("author")));
-                    homePageArticle.setChapterName(cursor.getString(cursor.getColumnIndex("chapterName")));
-                    homePageArticle.setSuperChapterName(cursor.getString(cursor.getColumnIndex("superChapterName")));
-                    homePageArticle.setLink(cursor.getString(cursor.getColumnIndex("link")));
-                    homePageArticle.setNiceDate(cursor.getString(cursor.getColumnIndex("niceDate")));
-                    homePageArticle.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-
-                    homePageArticles.add(homePageArticle);
-                }while(cursor.moveToNext());
-            }
-        }finally{
-            if(cursor != null && !cursor.isClosed()){
-                cursor.close();
-            }
-        }
+//    //从数据库中查询数据
+//    private ArrayList<HomePageArticle> getData(){
+//        ArrayList<HomePageArticle> homePageArticles = new ArrayList<HomePageArticle>();
+//
+//        HomePageArticleListDatabaseHelper homePageArticleListDatabaseHelper = new HomePageArticleListDatabaseHelper(MyApplication.getContext(),"HomePageArticleList.db",null,1);
+//        SQLiteDatabase db = homePageArticleListDatabaseHelper.getWritableDatabase();
+//
+//        //查询表中的数据
+//        Cursor cursor = db.query("HomePageArticleList",null,null,null,null,null,null);
+//
 //        if(cursor.moveToFirst()){
-//            do{
+//            while(cursor.moveToNext()){
 //                HomePageArticle homePageArticle = new HomePageArticle();
 //
 //                homePageArticle.setAuthor(cursor.getString(cursor.getColumnIndex("author")));
@@ -167,10 +152,11 @@ public class ArticleServer extends Thread{
 //                homePageArticle.setTitle(cursor.getString(cursor.getColumnIndex("title")));
 //
 //                homePageArticles.add(homePageArticle);
-//            }while(cursor.moveToNext());
+//            }
 //        }
-        cursor.close();
-        return homePageArticles;
-    }
+//        cursor.close();
+//        db.close();//关闭数据库
+//        return homePageArticles;
+//    }
 
 }
