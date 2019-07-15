@@ -13,13 +13,13 @@ public class HomeArticelDatabaseHelper extends SQLiteOpenHelper {
             + "superChapterName text,"
             + "link text, "
             + "niceDate text, "
-            + "page interger,"
+            + "page text,"
             + "title text)";
 
 
     public HomeArticelDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
-        this.mContext = mContext;
+        this.mContext = context;
     }
 
     @Override

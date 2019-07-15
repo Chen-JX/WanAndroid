@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.CJX.bean.Constant;
 import com.CJX.bean.HomePageArticle;
+import com.CJX.db.HomeArticelDatabase;
 import com.CJX.util.HttpConnectionUtil;
 
 import org.json.JSONArray;
@@ -23,6 +24,7 @@ public class ArticleServer extends Thread{
 
     private int mPosition;
     private Handler mHandler;
+   // private ArrayList<HomePageArticle> homePageArticles;
 
     public ArticleServer(int position, Handler handler){
         this.mPosition = position;
@@ -31,23 +33,35 @@ public class ArticleServer extends Thread{
 
     @Override
     public void run() {
+        ArrayList<HomePageArticle> homePageArticles;
+
         Message message = Message.obtain();
         Bundle bundle = new Bundle();
         message.setData(bundle);
-        if(!(HttpConnectionUtil.checkNetWork())){
-            message.what = Constant.ERROR;
-            mHandler.sendMessage(message);
+        HomeArticelDatabase database = new HomeArticelDatabase();
 
-        }else{
-            String url = "https://www.wanandroid.com/article/list/"+this.mPosition+"/json";
-            Log.d(TAG, "run: -----------> requests article page = " + this.mPosition);
-            message.what = Constant.LIST;
-            String articleJson = HttpConnectionUtil.sendHttpRequest(url,"","GET");
-            ArrayList<HomePageArticle> homePageArticles =  parseJson(articleJson);
-            bundle.putParcelableArrayList("result",homePageArticles);
-            mHandler.sendMessage(message);
+        homePageArticles = database.returnData(mPosition);
+
+        //检查数据库中有无数据
+        if(homePageArticles.size() == 0){
+            Log.d(TAG, "--------------------->NOT ONLINE ");
+            //数据库中没有找到数据，从网络中访问数据
+            if(!(HttpConnectionUtil.checkNetWork())){
+                message.what = Constant.ERROR;
+                mHandler.sendMessage(message);
+                return;
+            }else{
+                String url = "https://www.wanandroid.com/article/list/"+this.mPosition+"/json";
+                String articleJson = HttpConnectionUtil.sendHttpRequest(url,"","GET");
+                homePageArticles =  parseJson(articleJson);
+                //将数据存入数据库
+                database.insertDataToDatabase(homePageArticles);
+
+            }
         }
-
+        message.what = Constant.LIST;
+        bundle.putParcelableArrayList("result",homePageArticles);
+        mHandler.sendMessage(message);
     }
 
     /**
@@ -60,8 +74,8 @@ public class ArticleServer extends Thread{
         try{
             JSONObject firstObject = new JSONObject(json);
             JSONObject dataObject = firstObject.getJSONObject("data");
-            //TODO 页码为第一个参数
-            String page = firstObject.optString("");
+
+            String page = dataObject.optString("curPage");
 
             JSONArray jsonArray = dataObject.optJSONArray("datas");
 
