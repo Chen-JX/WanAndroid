@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff">
+    <!--项目中的数据显示-->
+
+    <ImageView
+        android:id="@+id/image_project_cover"
+        android:layout_width="68dp"
+        android:layout_height="65dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toEndOf="@id/image_project_cover"
+        android:layout_marginStart="10dp">
+
+        <TextView
+            android:id="@+id/tv_project_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/tv_project_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:textColor="#ff848484"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tv_project_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_project_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/tv_project_date"
+                android:layout_marginStart="30sp"
+                android:textSize="12sp"
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

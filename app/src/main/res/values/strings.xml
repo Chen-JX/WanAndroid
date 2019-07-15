@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CJX2.0</string>
+    <string name="author">"作者:"</string>
+    <string name="type">"分类:"</string>
+    <string name="date">"时间:"</string>
+    <string name="queryHint">"搜索关键词以空格的形式隔开"</string>
+    <string name="title_activity_system_article">SystemArticleActivity</string>
+
+</resources>

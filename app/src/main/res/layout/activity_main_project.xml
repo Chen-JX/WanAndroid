@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<!--
+    <include layout="@layout/activity_main_search_view"/>
+-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!--存放类名-->
+        <ListView
+            android:id="@+id/list_project_type"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+        </ListView>
+
+        <!--满足分类条件的文章-->
+        <com.CJX.widget.PullToRefreshListView
+            android:id="@+id/list_project_article"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+
+        </com.CJX.widget.PullToRefreshListView>
+
+    </LinearLayout>
+
+</LinearLayout>
