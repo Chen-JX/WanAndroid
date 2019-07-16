@@ -107,6 +107,17 @@ public class HomeArticelDatabase {
         db.close();
         Log.d(TAG,"--------------------> update Success");
     }
+    //获得数据库中已经存储的页码
+    public String getPage(){
 
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("select * from HomePageArticleList where id = MAX(id)",null);
+        cursor.moveToNext();
+        String page = cursor.getString(cursor.getColumnIndex("page"));
+
+        db.close();
+        return page;
+    }
 
 }

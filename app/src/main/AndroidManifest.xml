@@ -13,10 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name="com.CJX.service.UpdateArticleListService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name="com.CJX.view.SystemArticleActivity"
             android:label="@string/title_activity_system_article"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.CJX.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.CJX.view.SearchResultActivity"></activity>
+        <activity android:name="com.CJX.view.SearchResultActivity" />
         <activity android:name="com.CJX.view.WebActivity" />
     </application>
 

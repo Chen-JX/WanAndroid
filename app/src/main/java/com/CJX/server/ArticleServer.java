@@ -61,6 +61,9 @@ public class ArticleServer extends Thread{
         }
         message.what = Constant.LIST;
         bundle.putParcelableArrayList("result",homePageArticles);
+        //TODO 测试查询获取的页码数是否正确
+        Log.d(TAG, "--------------------->page = "+ database.getPage());
+
         mHandler.sendMessage(message);
     }
 
