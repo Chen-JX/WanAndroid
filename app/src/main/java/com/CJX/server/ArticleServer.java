@@ -8,6 +8,7 @@ import android.util.Log;
 import com.CJX.bean.Constant;
 import com.CJX.bean.HomePageArticle;
 import com.CJX.db.HomeArticelDatabase;
+import com.CJX.net.MethodManager;
 import com.CJX.util.HttpConnectionUtil;
 
 import org.json.JSONArray;
@@ -43,26 +44,39 @@ public class ArticleServer extends Thread{
         homePageArticles = database.returnData(mPosition);
 
         //检查数据库中有无数据
-        if(homePageArticles.size() == 0){
+        if(homePageArticles.size() == 0) {
             Log.d(TAG, "--------------------->NOT ONLINE ");
             //数据库中没有找到数据，从网络中访问数据
-            if(!(HttpConnectionUtil.checkNetWork())){
+//            if(!(HttpConnectionUtil.checkNetWork())){
+//                message.what = Constant.ERROR;
+//                mHandler.sendMessage(message);
+//                return;
+//            }else{
+//                String url = "https://www.wanandroid.com/article/list/"+this.mPosition+"/json";
+//                String articleJson = HttpConnectionUtil.sendHttpRequest(url,"","GET");
+//                homePageArticles =  parseJson(articleJson);
+//                //将数据存入数据库
+//                database.insertDataToDatabase(homePageArticles);
+//            }
+            MethodManager manager = new MethodManager();
+            if (!manager.checkNetWork()) {
                 message.what = Constant.ERROR;
                 mHandler.sendMessage(message);
                 return;
-            }else{
-                String url = "https://www.wanandroid.com/article/list/"+this.mPosition+"/json";
-                String articleJson = HttpConnectionUtil.sendHttpRequest(url,"","GET");
-                homePageArticles =  parseJson(articleJson);
+            } else {
+                String url = "https://www.wanandroid.com/article/list/" + this.mPosition + "/json";
+//                String articleJson = HttpConnectionUtil.sendHttpRequest(url, "", "GET");
+                String articleJson = manager.getData(url, "", "GET");
+
+                homePageArticles = parseJson(articleJson);
                 //将数据存入数据库
                 database.insertDataToDatabase(homePageArticles);
-
             }
         }
         message.what = Constant.LIST;
         bundle.putParcelableArrayList("result",homePageArticles);
-        //TODO 测试查询获取的页码数是否正确
-        Log.d(TAG, "--------------------->page = "+ database.getPage());
+//        //TODO 测试查询获取的页码数是否正确
+//        Log.d(TAG, "--------------------->page = "+ database.getPage());
 
         mHandler.sendMessage(message);
     }

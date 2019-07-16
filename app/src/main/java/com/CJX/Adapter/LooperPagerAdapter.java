@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.CJX.MyApplication;
 import com.CJX.bean.Banner;
+import com.CJX.net.HttpRequest;
+import com.CJX.net.MethodManager;
 import com.CJX.server.ImageServer;
 import com.CJX.util.HttpConnectionUtil;
 import com.CJX.view.MainActivity;
@@ -103,8 +105,10 @@ public class LooperPagerAdapter extends PagerAdapter {
         @Override
         protected Bitmap doInBackground(String... strings) {
             Bitmap bitmap = null;
-            if(HttpConnectionUtil.checkNetWork()){
-                bitmap = HttpConnectionUtil.getImage(strings[0]);
+            MethodManager manager = new MethodManager();
+            if(manager.checkNetWork()){
+               // bitmap = HttpConnectionUtil.getImage(strings[0]);
+                bitmap = manager.getBitmap(strings[0]);
             }
             return bitmap;
         }

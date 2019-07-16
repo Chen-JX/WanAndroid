@@ -96,8 +96,6 @@ public class HttpConnectionUtil {
         return false;
     }
 
-
-
     /**
      * 通过url，从服务器端获取图片数据
      * @param path

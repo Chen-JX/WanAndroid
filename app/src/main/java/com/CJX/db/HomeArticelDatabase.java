@@ -1,6 +1,8 @@
 package com.CJX.db;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -27,10 +29,21 @@ public class HomeArticelDatabase {
         updateData(homePageArticleList);
     }
 
+    private int returnPage(){
+        return getPage();
+    }
+
     //向数据库中插入数据
     private void insertData(ArrayList<HomePageArticle> homePageArticleList){
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+
+        //将第一页的第一条数据存入SharedPreferences
+        if(homePageArticleList.get(0).getPage().equals("1")){
+            SharedPreferences.Editor editor = MyApplication.getContext().getSharedPreferences("linkData", Context.MODE_PRIVATE).edit();
+            editor.putString("link",homePageArticleList.get(0).getLink());
+            editor.apply();
+        }
 
         for(int i = 0; i < homePageArticleList.size(); i++){
             HomePageArticle homePageArticle = homePageArticleList.get(i);
@@ -108,16 +121,18 @@ public class HomeArticelDatabase {
         Log.d(TAG,"--------------------> update Success");
     }
     //获得数据库中已经存储的页码
-    public String getPage(){
+    public int getPage(){
 
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery("select * from HomePageArticleList where id = MAX(id)",null);
-        cursor.moveToNext();
-        String page = cursor.getString(cursor.getColumnIndex("page"));
-
-        db.close();
-        return page;
+//        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+//
+////        Cursor cursor = db.rawQuery("select * from HomePageArticleList where id = MAX(id)",null);
+//        Cursor cursor = db.query("HomePageArticleList",null,"id = ?",new String[]{"MAX()"});
+//        cursor.moveToNext();
+//        String page = cursor.getString(cursor.getColumnIndex("page"));
+//
+//        db.close();
+//        return Integer.parseInt(page);
+        return 0;
     }
 
 }
